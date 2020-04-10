@@ -20,6 +20,7 @@
 
 .search-params form > div {
   margin: 0 1em;
+  width: 20%;
 }
 
 .search-params-colors {
@@ -41,6 +42,7 @@
   align-items: center;
   justify-content: center;
   width: auto;
+  position: relative;
 }
 
 .search-param-checkbox {

@@ -76,7 +76,6 @@ const calcAvgPos = (coordArrays) => {
     xValues = xValues.sort();
     yValues = yValues.sort();
 
-    console.log("Calculating Multi-Color Pos: ", xValues, yValues);
     const sumValues = (array) => {
       let sum = 0;
       array.forEach((value) => (sum = sum + value));
@@ -86,14 +85,13 @@ const calcAvgPos = (coordArrays) => {
       sumValues(xValues) / xValues.length,
       sumValues(yValues) / yValues.length,
     ];
-    console.log(avgCoords);
   }
   return avgCoords;
 };
 
 const Card = ({
-  key,
   name,
+  id,
   coords,
   colors,
   colorIdentity,
@@ -129,7 +127,7 @@ const Card = ({
   const props = useSpring({
     scale:
       active || hovered
-        ? [baseScale[0] * 2, baseScale[1] * 2, baseScale[2] * 2]
+        ? [baseScale[0] * 3, baseScale[1] * 3, baseScale[2] * 3]
         : baseScale,
     position: calculatedPosition,
     colors: normalizeColors(colors),
@@ -144,11 +142,11 @@ const Card = ({
   const handleOnClick = () => {
     setActive(!active);
     if (!active) {
-      handleSelectCard(key, name, imageUrl);
+      handleSelectCard(id, name, imageUrl);
       console.log("Activated new card");
     } else {
       console.log("Deactivated card");
-      handleDeselectCard(key, name, imageUrl);
+      handleDeselectCard(id, name, imageUrl);
     }
     console.log(
       name,

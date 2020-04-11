@@ -68,7 +68,8 @@ const Plane = ({ cards, origins, handleUpdateOverlayData }) => {
         ? alert("Submit a search")
         : cards.map((card) => (
             <Card
-              key={card.multiverseid}
+              key={card.id}
+              id={card.id}
               coords={origins.colorless}
               colors={card.colors}
               cmc={card.cmc}
@@ -79,7 +80,7 @@ const Plane = ({ cards, origins, handleUpdateOverlayData }) => {
               toughness={card.toughness}
               imageUrl={card.imageUrl}
               handleSelectCard={() =>
-                selectCard(card.multiverseid, card.name, card.imageUrl)
+                selectCard(card.id, card.name, card.imageUrl)
               }
             />
           ))}

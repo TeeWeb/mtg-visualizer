@@ -27,18 +27,26 @@ const App = () => {
     green: [-95, 0, -31],
   };
 
-  async function requestCards(activeColors, colorOperator, keyword, type) {
+  async function requestCards(
+    activeColors,
+    colorOperator,
+    cardSet,
+    keyword,
+    type
+  ) {
     console.log(
       "Requesting Cards: ",
       activeColors,
       colorOperator,
+      cardSet,
       keyword,
       type
     );
     const cardData = await mtg.card
       .where({
-        set: "WAR",
+        set: cardSet,
         type: type,
+        keyword: keyword,
       })
       .then((res) => {
         return res;

@@ -9,6 +9,8 @@ const SearchParams = ({ requestCards }) => {
   const [activeColors, setActiveColors] = useState([]);
   const [colorOperator, setColorOperator] = useState("And/Or");
   const [allCardTypes, setAllCardTypes] = useState([]);
+  const [allCardSets, setAllCardSets] = useState([]);
+  const [cardSet, setCardSet] = useState("");
 
   const abilityWords = KEYWORDS.abilityWords;
   const keywordAbilities = KEYWORDS.keywordAbilities;
@@ -24,8 +26,24 @@ const SearchParams = ({ requestCards }) => {
     });
   };
 
+  const getAllSets = () => {
+    fetch("https://api.magicthegathering.io/v1/sets").then((res) => {
+      const sets = res.json().then((data) => {
+        const setsData = data.sets;
+        let setsArray = [];
+        setsData.forEach((set) => {
+          setsArray.push(set.code);
+        });
+        setAllCardSets(setsArray);
+        return setsArray;
+      });
+      return sets;
+    });
+  };
+
   useEffect(() => {
     getAllTypes();
+    getAllSets();
     setActiveColors([]);
   }, [setActiveColors]);
 
@@ -34,7 +52,7 @@ const SearchParams = ({ requestCards }) => {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          requestCards(activeColors, colorOperator, keyword, type);
+          requestCards(activeColors, colorOperator, cardSet, keyword, type);
         }}
       >
         <div className="search-params-colors">
@@ -115,6 +133,25 @@ const SearchParams = ({ requestCards }) => {
         </div>
         <div className="search-params-terms">
           <div className="search-params-keywords">
+            <label htmlFor="search-set" className="search-param">
+              Card Set
+              <select
+                className="search-param-set"
+                id="search-set"
+                name="set"
+                onChange={(e) => setCardSet(e.target.value)}
+                onBlur={(e) => setCardSet(e.target.value)}
+              >
+                <option></option>
+                {allCardSets.map((set) => (
+                  <option key={set} value={set}>
+                    {set}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+          <div className="search-params-keywords">
             <label htmlFor="search-keyword" className="search-param">
               Keyword
               <select
@@ -124,7 +161,7 @@ const SearchParams = ({ requestCards }) => {
                 onChange={(e) => setKeyword(e.target.value)}
                 onBlur={(e) => setKeyword(e.target.value)}
               >
-                <option>All</option>
+                <option></option>
                 {allKeywords.map((keyword) => (
                   <option key={keyword} value={keyword}>
                     {keyword}
@@ -143,7 +180,7 @@ const SearchParams = ({ requestCards }) => {
                 onChange={(e) => setType(e.target.value)}
                 onBlur={(e) => setType(e.target.value)}
               >
-                <option>All</option>
+                <option></option>
                 {allCardTypes.map((type) => (
                   <option key={type} value={type}>
                     {type}

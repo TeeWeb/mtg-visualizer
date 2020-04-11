@@ -42,6 +42,7 @@ const App = () => {
       keyword,
       type
     );
+    const filteredCards = [];
     const cardData = await mtg.card
       .where({
         set: cardSet,
@@ -52,7 +53,13 @@ const App = () => {
         return res;
       });
 
-    setCards(cardData || []);
+    cardData.forEach((card) => {
+      if (card.imageUrl) {
+        filteredCards.push(card);
+      }
+    });
+
+    setCards(filteredCards);
   }
 
   const updateOverlayData = (id) => {

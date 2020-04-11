@@ -55,14 +55,21 @@ const App = () => {
     setCards(cardData || []);
   }
 
-  const updateOverlayData = (name, imageUrl) => {
-    let updatedOverlayData = {
-      name: name,
-      imageUrl: imageUrl,
-    };
-    console.log("Updating Overlay Data: ", name, imageUrl);
-    setOverlayData(updatedOverlayData);
-    return updatedOverlayData;
+  const updateOverlayData = (id) => {
+    setOverlayData();
+    let overlayCard;
+    console.log("Updating Overlay Data: ", id);
+    cards.forEach((card) => {
+      if (card.id === id) {
+        overlayCard = card;
+      }
+    });
+    if (!overlayCard) {
+      console.log("Unable to find card ID for Overlay data");
+    } else {
+      console.log("Found card for overlay:", overlayCard);
+      setOverlayData(overlayCard.imageUrl);
+    }
   };
 
   // const updateActiveColors = (activeColors) => {
@@ -103,7 +110,7 @@ const App = () => {
         <spotLight position={[0, 100, 150]} penumbra={0.15} castShadow />
       </Canvas>
       <GUI handleUpdateCards={() => requestCards} />
-      <Overlay name={overlayData.name} imageUrl={overlayData.imageUrl} />
+      <Overlay imageUrl={overlayData} />
     </div>
   );
 };

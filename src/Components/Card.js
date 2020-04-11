@@ -101,7 +101,6 @@ const Card = ({
   toughness,
   imageUrl,
   handleSelectCard,
-  handleDeselectCard,
 }) => {
   // Check if card is colorless (empty colorArray)
   if (colorIdentity.length === 0) {
@@ -141,21 +140,13 @@ const Card = ({
 
   const handleOnClick = () => {
     setActive(!active);
-    if (!active) {
-      handleSelectCard(id, name, imageUrl);
-      console.log("Activated new card");
-    } else {
-      console.log("Deactivated card");
-      handleDeselectCard(id, name, imageUrl);
-    }
+    handleSelectCard(active, id, name, imageUrl);
+
     console.log(
       name,
       active,
       colorIdentity,
       "CMC: " + cmc,
-      initialCoordsArray,
-      "Avg Coords: " + averagedCoords,
-      calculatedPosition,
       normalizeColors(colors),
       "3D position: " + props.position.payload.map((coord) => `${coord.value}`),
       imageUrl
@@ -167,9 +158,7 @@ const Card = ({
       ref={meshRef}
       onPointerOver={() => setHovered(true)}
       onPointerOut={() => setHovered(false)}
-      onClick={() => {
-        handleOnClick();
-      }}
+      onClick={() => handleOnClick()}
       scale={props.scale}
       position={props.position}
       castShadow

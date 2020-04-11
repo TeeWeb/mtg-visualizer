@@ -18,7 +18,7 @@ const Controls = () => {
     <orbitControls
       args={[camera, gl.domElement]}
       ref={orbitRef}
-      // maxPolarAngle={Math.PI / 2.01}
+      maxPolarAngle={Math.PI / 2.01}
       enableKeys={true}
       enablePanning={true}
       keys={{ LEFT: 65, UP: 87, RIGHT: 68, BOTTOM: 83 }}

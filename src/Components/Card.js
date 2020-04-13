@@ -46,8 +46,8 @@ const convertColorIdsToPosArrays = (colorIdArray) => {
 };
 
 const convertCmcToYValue = (cmcData) => {
-  let yValue = (cmcData + 0.1) * 10;
-  return yValue;
+  let zValue = (cmcData + 0.1) * 10;
+  return zValue;
 };
 
 const normalizeColors = (prevColors) => {
@@ -101,7 +101,6 @@ const Card = ({
   toughness,
   imageUrl,
   handleSelectCard,
-  handleDeselectCard,
 }) => {
   // Check if card is colorless (empty colorArray)
   if (colorIdentity.length === 0) {
@@ -131,6 +130,7 @@ const Card = ({
         : baseScale,
     position: calculatedPosition,
     colors: normalizeColors(colors),
+    opacity: active || hovered ? 1.0 : 0.6,
   });
 
   useFrame(() => {
@@ -141,21 +141,13 @@ const Card = ({
 
   const handleOnClick = () => {
     setActive(!active);
-    if (!active) {
-      handleSelectCard(id, name, imageUrl);
-      console.log("Activated new card");
-    } else {
-      console.log("Deactivated card");
-      handleDeselectCard(id, name, imageUrl);
-    }
+    handleSelectCard(active, id, name, imageUrl);
+
     console.log(
       name,
       active,
       colorIdentity,
       "CMC: " + cmc,
-      initialCoordsArray,
-      "Avg Coords: " + averagedCoords,
-      calculatedPosition,
       normalizeColors(colors),
       "3D position: " + props.position.payload.map((coord) => `${coord.value}`),
       imageUrl
@@ -167,9 +159,7 @@ const Card = ({
       ref={meshRef}
       onPointerOver={() => setHovered(true)}
       onPointerOut={() => setHovered(false)}
-      onClick={() => {
-        handleOnClick();
-      }}
+      onClick={() => handleOnClick()}
       scale={props.scale}
       position={props.position}
       castShadow
@@ -179,7 +169,8 @@ const Card = ({
         attach="material"
         color={props.colors}
         clearcloat={0.5}
-        transparency={0.7}
+        transparent={true}
+        opacity={props.opacity}
       />
     </a.mesh>
   );

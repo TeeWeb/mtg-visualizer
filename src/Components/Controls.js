@@ -7,7 +7,7 @@ extend({ OrbitControls });
 const Controls = () => {
   const { camera, gl } = useThree();
   const orbitRef = useRef();
-  camera.position.set(0, 100, 125);
+  camera.position.set(0, 100, 150);
   camera.aspect = window.innerWidth / window.innerHeight;
 
   useFrame(() => {
@@ -18,7 +18,7 @@ const Controls = () => {
     <orbitControls
       args={[camera, gl.domElement]}
       ref={orbitRef}
-      // maxPolarAngle={Math.PI / 2.01}
+      maxPolarAngle={Math.PI / 2.01}
       enableKeys={true}
       enablePanning={true}
       keys={{ LEFT: 65, UP: 87, RIGHT: 68, BOTTOM: 83 }}

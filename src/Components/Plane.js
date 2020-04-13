@@ -3,20 +3,21 @@ import Card from "./Card";
 
 const Plane = ({ cards, origins, handleUpdateOverlayData }) => {
   const [displayedCards, setDisplayedCards] = useState([cards]);
-  const [selectedCard, setSelectedCard] = useState({});
+  const [selectedCard, setSelectedCard] = useState();
 
-  const selectCard = (cardKey, name, imageUrl) => {
-    console.log("Selecting card: ", cardKey, name);
-    if (cardKey === selectedCard) {
+  const selectCard = (isActive, cardKey, name, imageUrl) => {
+    if (isActive) {
       setSelectedCard();
-      handleUpdateOverlayData("", undefined);
     } else {
+      console.log("Selecting card:", cardKey, name, imageUrl);
       setSelectedCard(cardKey);
-      handleUpdateOverlayData(name, imageUrl);
     }
   };
 
-  useEffect(() => {}, [selectedCard]);
+  useEffect(() => {
+    console.log("Currently selected card: " + selectedCard);
+    handleUpdateOverlayData(selectedCard);
+  }, [selectedCard]);
 
   return (
     <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -2, 0]} receiveShadow>
@@ -27,6 +28,8 @@ const Plane = ({ cards, origins, handleUpdateOverlayData }) => {
         coords={origins.colorless}
         colorIdentity={[]}
         cmc={0}
+        handleSelectCard={selectCard}
+        id={"test-colorless"}
       />
       <Card
         name={"White TestCard"}
@@ -34,6 +37,8 @@ const Plane = ({ cards, origins, handleUpdateOverlayData }) => {
         colorIdentity={["W"]}
         colors={["White"]}
         cmc={1}
+        handleSelectCard={selectCard}
+        id={"test-white"}
       />
       <Card
         name={"Blue TestCard"}
@@ -41,6 +46,8 @@ const Plane = ({ cards, origins, handleUpdateOverlayData }) => {
         colorIdentity={["U"]}
         colors={["Blue"]}
         cmc={1}
+        handleSelectCard={selectCard}
+        id={"test-blue"}
       />
       <Card
         name={"Black TestCard"}
@@ -48,6 +55,8 @@ const Plane = ({ cards, origins, handleUpdateOverlayData }) => {
         colorIdentity={["B"]}
         colors={["Black"]}
         cmc={1}
+        handleSelectCard={selectCard}
+        id={"test-black"}
       />
       <Card
         name={"Red TestCard"}
@@ -55,6 +64,8 @@ const Plane = ({ cards, origins, handleUpdateOverlayData }) => {
         colorIdentity={["R"]}
         colors={["Red"]}
         cmc={1}
+        handleSelectCard={selectCard}
+        id={"test-red"}
       />
       <Card
         name={"Green TestCard"}
@@ -62,28 +73,26 @@ const Plane = ({ cards, origins, handleUpdateOverlayData }) => {
         colorIdentity={["G"]}
         colors={["Green"]}
         cmc={1}
+        handleSelectCard={selectCard}
+        id={"test-green"}
       />
       ;
-      {cards.length === 0
-        ? alert("Submit a search")
-        : cards.map((card) => (
-            <Card
-              key={card.id}
-              id={card.id}
-              coords={origins.colorless}
-              colors={card.colors}
-              cmc={card.cmc}
-              name={card.name}
-              colorIdentity={card.colorIdentity}
-              manaCost={card.manaCost}
-              power={card.power}
-              toughness={card.toughness}
-              imageUrl={card.imageUrl}
-              handleSelectCard={() =>
-                selectCard(card.id, card.name, card.imageUrl)
-              }
-            />
-          ))}
+      {cards.map((card) => (
+        <Card
+          key={card.id}
+          id={card.id}
+          coords={origins.colorless}
+          colors={card.colors}
+          cmc={card.cmc}
+          name={card.name}
+          colorIdentity={card.colorIdentity}
+          manaCost={card.manaCost}
+          power={card.power}
+          toughness={card.toughness}
+          imageUrl={card.imageUrl}
+          handleSelectCard={selectCard}
+        />
+      ))}
     </mesh>
   );
 };

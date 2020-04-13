@@ -7,7 +7,7 @@ extend({ OrbitControls });
 const Controls = () => {
   const { camera, gl } = useThree();
   const orbitRef = useRef();
-  camera.position.set(0, 100, 125);
+  camera.position.set(0, 100, 150);
   camera.aspect = window.innerWidth / window.innerHeight;
 
   useFrame(() => {

@@ -5,12 +5,10 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import * as THREE from "three";
 import mtg from "mtgsdk";
 
-import Card from "./Components/Card";
 import Controls from "./Components/Controls";
 import Plane from "./Components/Plane";
 import GUI from "./Components/GUI";
 import Overlay from "./Components/Overlay";
-import { update } from "react-spring/three";
 
 const App = () => {
   extend({ OrbitControls });

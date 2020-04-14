@@ -56,7 +56,6 @@ export const convertCmcToYValue = (cmcData) => {
 // Returns color strings in ThreeJS-usable format for displaying object colors
 export const normalizeColors = (colorIdentity) => {
   let normalizedColors;
-  console.log(colorIdentity);
 
   if (isColorless(colorIdentity)) {
     normalizedColors = "gray";

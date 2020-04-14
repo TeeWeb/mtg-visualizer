@@ -20,63 +20,14 @@ const Plane = ({ cards, origins, handleUpdateOverlayData }) => {
   }, [selectedCard]);
 
   return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -2, 0]} receiveShadow>
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
       <planeBufferGeometry attach="geometry" args={[1000, 1000]} />
-      <meshStandardMaterial attach="material" color={"purple"} transparent />
-      <Card
-        name={"Colorless TestCard"}
-        coords={origins.colorless}
-        colorIdentity={[]}
-        cmc={0}
-        handleSelectCard={selectCard}
-        id={"test-colorless"}
+      <meshStandardMaterial
+        attach="material"
+        color={"silver"}
+        transparent
+        opacity={0.1}
       />
-      <Card
-        name={"White TestCard"}
-        coords={origins.white}
-        colorIdentity={["W"]}
-        colors={["White"]}
-        cmc={1}
-        handleSelectCard={selectCard}
-        id={"test-white"}
-      />
-      <Card
-        name={"Blue TestCard"}
-        coords={origins.blue}
-        colorIdentity={["U"]}
-        colors={["Blue"]}
-        cmc={1}
-        handleSelectCard={selectCard}
-        id={"test-blue"}
-      />
-      <Card
-        name={"Black TestCard"}
-        coords={origins.black}
-        colorIdentity={["B"]}
-        colors={["Black"]}
-        cmc={1}
-        handleSelectCard={selectCard}
-        id={"test-black"}
-      />
-      <Card
-        name={"Red TestCard"}
-        coords={origins.red}
-        colorIdentity={["R"]}
-        colors={["Red"]}
-        cmc={1}
-        handleSelectCard={selectCard}
-        id={"test-red"}
-      />
-      <Card
-        name={"Green TestCard"}
-        coords={origins.green}
-        colorIdentity={["G"]}
-        colors={["Green"]}
-        cmc={1}
-        handleSelectCard={selectCard}
-        id={"test-green"}
-      />
-      ;
       {cards.map((card) => (
         <Card
           key={card.id}

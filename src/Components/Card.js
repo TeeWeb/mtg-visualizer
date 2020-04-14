@@ -24,11 +24,8 @@ const Card = ({
   handleSelectCard,
 }) => {
   const threeJSColors = normalizeColors(colorIdentity);
-  console.log(threeJSColors);
   const initialCoordsArray = convertColorIdsToPosArrays(colorIdentity);
-  console.log(initialCoordsArray);
   const averagedCoords = calcAvgPos(initialCoordsArray);
-  console.log(averagedCoords);
   const calculatedPosition = [
     averagedCoords[0],
     averagedCoords[1],

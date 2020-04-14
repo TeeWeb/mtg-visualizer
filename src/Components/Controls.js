@@ -1,17 +1,33 @@
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useThree, useFrame, extend } from "react-three-fiber";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 extend({ OrbitControls });
 
-const Controls = () => {
+const Controls = ({ selectedCard }) => {
   const { camera, gl } = useThree();
   const orbitRef = useRef();
-  camera.position.set(0, 100, 150);
+  const [cardInFocus, setCardInFocus] = useState([0, 0, 0]);
+  camera.up.set(0, 1, 0);
+  camera.focus = 0;
   camera.aspect = window.innerWidth / window.innerHeight;
+
+  useEffect(() => {
+    if (selectedCard) {
+      setCardInFocus(selectedCard);
+    }
+    camera.position.set(
+      cardInFocus[0],
+      cardInFocus[1] + 100,
+      cardInFocus[2] + 125
+    );
+  }, [selectedCard]);
+
+  console.log("cardInFocus Position: ", cardInFocus);
 
   useFrame(() => {
     orbitRef.current.update();
+    camera.lookAt(cardInFocus[0], cardInFocus[1], cardInFocus[2]);
   });
 
   return (

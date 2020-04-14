@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import Card from "./Card";
+import { SynergyCalculator } from "./SynergyCalculator";
 
 const Plane = ({ cards, origins, handleUpdateOverlayData }) => {
   const [displayedCards, setDisplayedCards] = useState([cards]);
   const [selectedCard, setSelectedCard] = useState();
+  let cardSynergy = SynergyCalculator(selectedCard, cards);
 
   const selectCard = (isActive, cardKey, name, imageUrl) => {
     if (isActive) {
@@ -17,7 +19,8 @@ const Plane = ({ cards, origins, handleUpdateOverlayData }) => {
   useEffect(() => {
     console.log("Currently selected card: " + selectedCard);
     handleUpdateOverlayData(selectedCard);
-  }, [selectedCard]);
+    console.log(cardSynergy);
+  }, [selectedCard, cards]);
 
   return (
     <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>

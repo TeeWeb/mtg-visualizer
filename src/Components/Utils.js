@@ -83,19 +83,41 @@ export const normalizeColors = (colorIdentity) => {
   return normalizedColors;
 };
 
+const extractXYValues = (coordArrays) => {
+  let xValues = [];
+  let yValues = [];
+
+  if (typeof coordArrays[0][0] == "number") {
+    coordArrays.forEach((array) => {
+      xValues.push(array[0]);
+      yValues.push(array[1]);
+    });
+  } else if (typeof coordArrays[0][0][0] == "number") {
+    coordArrays.forEach((coordArray) => {
+      coordArray.forEach((array) => {
+        xValues.push(array[0]);
+        yValues.push(array[1]);
+      });
+    });
+  } else {
+    console.log("HELP!!! LEVEL 4+ COORD EXTRACTION!?", coordArrays);
+  }
+
+  const xyValues = {};
+  xyValues.xValues = xValues;
+  xyValues.yValues = yValues;
+  return xyValues;
+};
+
 export const calcAvgPos = (coordArrays) => {
   let avgCoords;
-  // If card is not multicolored, use the color origin.
-  //Otherwise, calculate the middle point by averaging the coords of it's color origins
+  // Calculate the middle point by averaging the coords of it's color origins and synergy coords
   if (coordArrays.length === 1) {
     avgCoords = coordArrays[0];
   } else {
-    let xValues = [];
-    let yValues = [];
-    coordArrays.forEach((coordArray) => xValues.push(coordArray[0]));
-    coordArrays.forEach((coordArray) => yValues.push(coordArray[1]));
-    xValues = xValues.sort();
-    yValues = yValues.sort();
+    const xyValues = extractXYValues(coordArrays);
+    const xValues = xyValues.xValues.sort();
+    const yValues = xyValues.yValues.sort();
 
     const sumValues = (array) => {
       let sum = 0;
@@ -110,7 +132,7 @@ export const calcAvgPos = (coordArrays) => {
   return avgCoords;
 };
 
-export const synergyCalculator = (
+const getSynergisticCards = (
   selectedCardKey,
   colorId,
   supertypes,
@@ -163,4 +185,32 @@ export const synergyCalculator = (
 
     return synergisticCards;
   }
+};
+
+export const getSynergisticCardCoords = (
+  selectedCardKey,
+  colorId,
+  supertypes,
+  types,
+  subtypes,
+  text,
+  cards
+) => {
+  let allCoords = [];
+  let synergisticCards = getSynergisticCards(
+    selectedCardKey,
+    colorId,
+    supertypes,
+    types,
+    subtypes,
+    text,
+    cards
+  );
+
+  synergisticCards.forEach((card) => {
+    let cardCoords = convertColorIdsToPosArrays(card.colorIdentity);
+    allCoords.push(cardCoords);
+  });
+
+  return allCoords;
 };

@@ -23,7 +23,7 @@ const Controls = ({ selectedCard }) => {
     );
   }, [selectedCard]);
 
-  console.log("cardInFocus Position: ", cardInFocus);
+  // console.log("cardInFocus Position: ", cardInFocus);
 
   useFrame(() => {
     orbitRef.current.update();

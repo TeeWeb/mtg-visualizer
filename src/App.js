@@ -45,7 +45,7 @@ const App = () => {
       .where({
         set: cardSet,
         type: type,
-        text: keyword || type,
+        // text: keyword || type,
       })
       .then((res) => {
         return res;

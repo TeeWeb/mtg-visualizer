@@ -1,26 +1,46 @@
 import React, { useState, useEffect } from "react";
 import Card from "./Card";
-import { SynergyCalculator } from "./SynergyCalculator";
+import { synergyCalculator } from "./Utils";
 
 const Plane = ({ cards, origins, handleUpdateOverlayData }) => {
-  const [displayedCards, setDisplayedCards] = useState([cards]);
   const [selectedCard, setSelectedCard] = useState();
-  let cardSynergy = SynergyCalculator(selectedCard, cards);
+  const [cardsWithSynergy, setCardsWithSynergy] = useState([]);
 
-  const selectCard = (isActive, cardKey, name, imageUrl) => {
+  const selectCard = (
+    isActive,
+    cardKey,
+    name,
+    colorId,
+    supertypes,
+    types,
+    subtypes,
+    text,
+    imageUrl
+  ) => {
     if (isActive) {
       setSelectedCard();
     } else {
-      console.log("Selecting card:", cardKey, name, imageUrl);
+      console.log("Selecting card:", cardKey, name, colorId, imageUrl);
       setSelectedCard(cardKey);
+      setCardsWithSynergy(
+        synergyCalculator(
+          cardKey,
+          colorId,
+          supertypes,
+          types,
+          subtypes,
+          text,
+          cards
+        )
+      );
     }
   };
 
   useEffect(() => {
     console.log("Currently selected card: " + selectedCard);
+    console.log("Number of Cards w/ Synergy: " + cardsWithSynergy.length);
     handleUpdateOverlayData(selectedCard);
-    console.log(cardSynergy);
-  }, [selectedCard, cards]);
+  }, [selectedCard, cardsWithSynergy]);
 
   return (
     <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
@@ -45,6 +65,10 @@ const Plane = ({ cards, origins, handleUpdateOverlayData }) => {
           toughness={card.toughness}
           imageUrl={card.imageUrl}
           handleSelectCard={selectCard}
+          supertypes={card.supertypes}
+          types={card.types}
+          subtypes={card.subtypes}
+          text={card.text}
         />
       ))}
     </mesh>

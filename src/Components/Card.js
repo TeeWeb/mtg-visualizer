@@ -22,6 +22,10 @@ const Card = ({
   toughness,
   imageUrl,
   handleSelectCard,
+  supertypes,
+  types,
+  subtypes,
+  text,
 }) => {
   const threeJSColors = normalizeColors(colorIdentity);
   const initialCoordsArray = convertColorIdsToPosArrays(colorIdentity);
@@ -56,7 +60,17 @@ const Card = ({
 
   const handleOnClick = () => {
     setActive(!active);
-    handleSelectCard(active, id, name, imageUrl);
+    handleSelectCard(
+      active,
+      id,
+      name,
+      colorIdentity,
+      supertypes,
+      types,
+      subtypes,
+      text,
+      imageUrl
+    );
 
     console.log(
       name,

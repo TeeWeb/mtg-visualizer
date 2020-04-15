@@ -109,3 +109,58 @@ export const calcAvgPos = (coordArrays) => {
   }
   return avgCoords;
 };
+
+export const synergyCalculator = (
+  selectedCardKey,
+  colorId,
+  supertypes,
+  types,
+  subtypes,
+  text,
+  cards
+) => {
+  // Skip if no card is selected
+  if (selectedCardKey === undefined) {
+    return;
+  } else {
+    // Get an array of all visible cards without the currently selected card
+    let otherCards = cards.filter((card) => card.id != selectedCardKey);
+
+    const calcColorSynergies = (colorId, otherCards) => {
+      // Check for "synergy" in colors of the cards (colorless synergizes with all any color)
+      let colorString;
+      if (colorId.length === 0) {
+        otherCards.forEach((card, i, array) => {
+          array[i].synergy = 0;
+        });
+      } else {
+        for (let i = 0; i < colorId.length; i++) {
+          otherCards.forEach((card, i, array) => {
+            colorString = card.colorIdentity.join("");
+            if (colorString.length === 0) {
+              array[i].synergy = 0;
+            } else if (colorString.includes(colorId)) {
+              array[i].synergy = 1;
+            } else {
+              array[i].synergy = -1;
+            }
+          });
+        }
+      }
+      return otherCards;
+    };
+
+    // Combines all aspects of synergy into one value
+    const calcuateSynergy = () => {
+      let cardsWithSynergyValues = calcColorSynergies(colorId, otherCards);
+      const filteredCards = cardsWithSynergyValues.filter(
+        (card) => card.synergy >= 0
+      );
+      return filteredCards;
+    };
+
+    const synergisticCards = calcuateSynergy();
+
+    return synergisticCards;
+  }
+};

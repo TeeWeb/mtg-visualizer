@@ -13,7 +13,6 @@ import "./Card.css";
 const Card = ({
   name,
   id,
-  coords,
   colors,
   colorIdentity,
   cmc,
@@ -64,6 +63,7 @@ const Card = ({
       active,
       id,
       name,
+      cmc,
       colorIdentity,
       supertypes,
       types,

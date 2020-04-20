@@ -132,7 +132,7 @@ export const calcAvgPos = (coordArrays) => {
   return avgCoords;
 };
 
-const getSynergisticCards = (
+export const getSynergisticCards = (
   selectedCardKey,
   colorId,
   supertypes,

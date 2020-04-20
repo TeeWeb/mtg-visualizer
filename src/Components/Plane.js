@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from "react";
+import { useSpring, a } from "react-spring/three";
 import Card from "./Card";
-import { getSynergisticCardCoords, calcAvgPos } from "./Utils";
+import {
+  getSynergisticCardCoords,
+  getSynergisticCards,
+  calcAvgPos,
+} from "./Utils";
 
 const Plane = ({ cards, origins, handleUpdateOverlayData }) => {
+  const [allCards, setAllCards] = useState(cards);
   const [selectedCard, setSelectedCard] = useState();
   const [cardCoordsWithSynergy, setCardCoordsWithSynergy] = useState();
 
@@ -10,6 +16,7 @@ const Plane = ({ cards, origins, handleUpdateOverlayData }) => {
     isActive,
     cardKey,
     name,
+    cmc,
     colorId,
     supertypes,
     types,
@@ -21,29 +28,37 @@ const Plane = ({ cards, origins, handleUpdateOverlayData }) => {
       setSelectedCard();
     } else {
       console.log("Selecting card:", cardKey, name, colorId, imageUrl);
-      setSelectedCard(cardKey);
-      setCardCoordsWithSynergy(
-        getSynergisticCardCoords(
-          cardKey,
-          colorId,
-          supertypes,
-          types,
-          subtypes,
-          text,
-          cards
-        )
-      );
+      cards.forEach((card) => {
+        if (card.id === cardKey) {
+          setSelectedCard(card);
+        }
+      });
     }
   };
 
   useEffect(() => {
-    console.log("Currently selected card:", selectedCard);
-    console.log("Card Coords w/ Synergy:", cardCoordsWithSynergy);
+    if (selectedCard === undefined) {
+      setAllCards(cards);
+    } else {
+      console.log("Currently selected card:", selectedCard);
+      let filteredCards = getSynergisticCards(
+        selectedCard.id,
+        selectedCard.colorIdentity,
+        selectedCard.supertypes,
+        selectedCard.types,
+        selectedCard.subtypes,
+        selectedCard.text,
+        cards
+      );
+      filteredCards.push(selectedCard);
+      setAllCards(filteredCards);
+      console.log(filteredCards);
+      handleUpdateOverlayData(selectedCard.id);
+    }
     if (cardCoordsWithSynergy != undefined) {
       console.log("Average synergy coord:", calcAvgPos(cardCoordsWithSynergy));
     }
-    handleUpdateOverlayData(selectedCard);
-  }, [selectedCard, cardCoordsWithSynergy]);
+  }, [cards, selectedCard, cardCoordsWithSynergy]);
 
   return (
     <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
@@ -54,7 +69,7 @@ const Plane = ({ cards, origins, handleUpdateOverlayData }) => {
         transparent
         opacity={0.1}
       />
-      {cards.map((card) => (
+      {allCards.map((card) => (
         <Card
           key={card.id}
           id={card.id}

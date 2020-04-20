@@ -52,7 +52,13 @@ const App = () => {
       });
 
     cardData.forEach((card) => {
+      // TODO: Determine how to handle duplicate cards/alternate artwork
       if (card.imageUrl) {
+        filteredCards.push(card);
+      } else {
+        // Use back of card for Overlay image if no card image available
+        card.imageUrl =
+          "https://gamepedia.cursecdn.com/mtgsalvation_gamepedia/f/f8/Magic_card_back.jpg?version=0ddc8d41c3b69c2c3c4bb5d72669ffd7";
         filteredCards.push(card);
       }
     });

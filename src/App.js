@@ -32,27 +32,25 @@ const App = () => {
     keyword,
     type
   ) {
-    console.log(
-      "Requesting Cards: ",
-      activeColors,
-      colorOperator,
-      cardSet,
-      keyword,
-      type
-    );
+    console.log("Requesting Cards: ", cardSet, type);
     const filteredCards = [];
     const cardData = await mtg.card
       .where({
         set: cardSet,
         type: type,
-        text: keyword || type,
       })
       .then((res) => {
         return res;
       });
 
     cardData.forEach((card) => {
+      // TODO: Determine how to handle duplicate cards/alternate artwork
       if (card.imageUrl) {
+        filteredCards.push(card);
+      } else {
+        // Use back of card for Overlay image if no card image available
+        card.imageUrl =
+          "https://gamepedia.cursecdn.com/mtgsalvation_gamepedia/f/f8/Magic_card_back.jpg?version=0ddc8d41c3b69c2c3c4bb5d72669ffd7";
         filteredCards.push(card);
       }
     });
@@ -72,7 +70,7 @@ const App = () => {
     if (!overlayCard) {
       console.log("Unable to find card ID for Overlay data");
     } else {
-      console.log("Found card for overlay:", overlayCard);
+      // console.log("Found card for overlay:", overlayCard);
       setOverlayData(overlayCard.imageUrl);
     }
   };

@@ -6,7 +6,7 @@ import "./GUI.css";
 const GUI = ({ handleUpdateCards }) => {
   return (
     <div className="gui">
-      <h1>MTG Visualizer</h1>
+      <h1>MTG Synergy Guide</h1>
       <SearchParams requestCards={handleUpdateCards()} />
     </div>
   );

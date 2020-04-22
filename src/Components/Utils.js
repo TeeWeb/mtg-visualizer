@@ -147,24 +147,33 @@ export const getSynergisticCards = (
   } else {
     // Get an array of all visible cards without the currently selected card
     let otherCards = cards.filter((card) => card.id != selectedCardKey);
+    // Reset any previous synergy calculations
+    otherCards.forEach((card) => (card.synergy = 0));
 
     const calcColorSynergies = (colorId, otherCards) => {
       // Check for "synergy" in colors of the cards (colorless synergizes with all any color)
       let colorString;
       if (colorId.length === 0) {
+        // Main card is colorless and has color-synergy with all other cards
         otherCards.forEach((card, i, array) => {
           array[i].synergy = 0;
         });
       } else {
         for (let i = 0; i < colorId.length; i++) {
-          otherCards.forEach((card, i, array) => {
+          otherCards.forEach((card, j, array) => {
             colorString = card.colorIdentity.join("");
+            if (!array[j].synergy) {
+              array[j].synergy = 0;
+            }
             if (colorString.length === 0) {
-              array[i].synergy = 0;
-            } else if (colorString.includes(colorId)) {
-              array[i].synergy = 1;
+              // Compared card is colorless
+              array[j].synergy += 0;
+            } else if (colorString.includes(colorId[i])) {
+              // Cards share a color
+              array[j].synergy += 1;
             } else {
-              array[i].synergy = -1;
+              // Cards don't share any colors
+              array[j].synergy += -1;
             }
           });
         }

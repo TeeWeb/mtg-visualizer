@@ -32,14 +32,7 @@ const App = () => {
     keyword,
     type
   ) {
-    console.log(
-      "Requesting Cards: ",
-      activeColors,
-      colorOperator,
-      cardSet,
-      keyword,
-      type
-    );
+    console.log("Requesting Cards: ", cardSet, type);
     const filteredCards = [];
     const cardData = await mtg.card
       .where({
@@ -77,7 +70,7 @@ const App = () => {
     if (!overlayCard) {
       console.log("Unable to find card ID for Overlay data");
     } else {
-      console.log("Found card for overlay:", overlayCard);
+      // console.log("Found card for overlay:", overlayCard);
       setOverlayData(overlayCard.imageUrl);
     }
   };

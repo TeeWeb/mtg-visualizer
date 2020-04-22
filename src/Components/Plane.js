@@ -1,16 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useSpring, a } from "react-spring/three";
 import Card from "./Card";
-import {
-  getSynergisticCardCoords,
-  getSynergisticCards,
-  calcAvgPos,
-} from "./Utils";
+import { getSynergisticCards, calcAvgPos } from "./Utils";
 
 const Plane = ({ cards, origins, handleUpdateOverlayData }) => {
   const [allCards, setAllCards] = useState(cards);
   const [selectedCard, setSelectedCard] = useState();
-  const [cardCoordsWithSynergy, setCardCoordsWithSynergy] = useState();
+  // TODO: Use cardCoordsWithSynergy to relocate orbs based on positions of synergistic cards
+  // const [cardCoordsWithSynergy, setCardCoordsWithSynergy] = useState();
 
   const selectCard = (
     isActive,
@@ -40,7 +36,6 @@ const Plane = ({ cards, origins, handleUpdateOverlayData }) => {
     if (selectedCard === undefined) {
       setAllCards(cards);
     } else {
-      console.log("Currently selected card:", selectedCard);
       let filteredCards = getSynergisticCards(
         selectedCard.id,
         selectedCard.colorIdentity,
@@ -52,13 +47,10 @@ const Plane = ({ cards, origins, handleUpdateOverlayData }) => {
       );
       filteredCards.push(selectedCard);
       setAllCards(filteredCards);
-      console.log(filteredCards);
+      console.log("Filtered cards:", filteredCards);
       handleUpdateOverlayData(selectedCard.id);
     }
-    if (cardCoordsWithSynergy != undefined) {
-      console.log("Average synergy coord:", calcAvgPos(cardCoordsWithSynergy));
-    }
-  }, [cards, selectedCard, cardCoordsWithSynergy]);
+  }, [cards, selectedCard]);
 
   return (
     <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>

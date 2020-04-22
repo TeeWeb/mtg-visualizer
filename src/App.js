@@ -45,7 +45,6 @@ const App = () => {
       .where({
         set: cardSet,
         type: type,
-        // text: keyword || type,
       })
       .then((res) => {
         return res;
@@ -69,16 +68,16 @@ const App = () => {
   const updateOverlayData = (id) => {
     setOverlayData();
     let overlayCard;
-    // console.log("Updating Overlay Data: ", id);
+    console.log("Updating Overlay Data: ", id);
     cards.forEach((card) => {
       if (card.id === id) {
         overlayCard = card;
       }
     });
     if (!overlayCard) {
-      // console.log("Unable to find card ID for Overlay data");
+      console.log("Unable to find card ID for Overlay data");
     } else {
-      // console.log("Found card for overlay:", overlayCard);
+      console.log("Found card for overlay:", overlayCard);
       setOverlayData(overlayCard.imageUrl);
     }
   };

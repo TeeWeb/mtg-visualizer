@@ -1,14 +1,17 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useSpring, a } from "react-spring/three";
-import { useFrame } from "react-three-fiber";
+import { useFrame, useLoader } from "react-three-fiber";
+import * as THREE from "three";
 
 import {
   normalizeColors,
   convertCmcToYValue,
   convertColorIdsToPosArrays,
   calcAvgPos,
+  getTexture,
 } from "./Utils";
 import "./Card.css";
+import { TextureLoader } from "three";
 
 const Card = ({
   name,
@@ -34,6 +37,7 @@ const Card = ({
     averagedCoords[1],
     convertCmcToYValue(cmc),
   ];
+  const texture = useLoader(THREE.TextureLoader, "../img/5color-texture.png");
 
   const meshRef = useRef();
   const baseScale = [1, 1, 1];
@@ -94,12 +98,12 @@ const Card = ({
       castShadow
     >
       <sphereBufferGeometry attach="geometry" args={[1]} />
-      <a.meshPhysicalMaterial
+      <a.meshStandardMaterial
         attach="material"
         color={props.colors}
-        clearcloat={0.5}
         transparent={true}
         opacity={props.opacity}
+        map={texture}
       />
     </a.mesh>
   );

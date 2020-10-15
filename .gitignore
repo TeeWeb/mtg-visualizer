@@ -4,4 +4,6 @@ node_modules/
 dist/
 coverage/
 .vscode/
-.env
+server/env/
+venv/
+server/__pycache__/

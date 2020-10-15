@@ -1,3 +1,5 @@
+import * as THREE from "three";
+
 const origins = {
   colorless: [0, 0, 0],
   white: [0, 100, 0],
@@ -13,6 +15,57 @@ const isColorless = (colorIdentity) => {
   } else {
     return false;
   }
+};
+
+const textures = {
+  undefined: new THREE.TextureLoader().load("img/colorless-texture.png"),
+  W: new THREE.TextureLoader().load("../img/colorless-texture.png"),
+  B: new THREE.TextureLoader().load("../img/b-texture.png"),
+  G: new THREE.TextureLoader().load("../img/g-texture.png"),
+  U: "",
+  R: "",
+  BW: "",
+  UW: "",
+  GW: new THREE.TextureLoader().load("../img/gw-texture.png"),
+  RW: "",
+  BG: "",
+  BR: "",
+  BU: "",
+  GU: "",
+  GR: "",
+  RU: "",
+  BGW: "",
+  BGU: "",
+  BGR: "",
+  BRW: "",
+  BRU: "",
+  BUW: "",
+  GUW: "",
+  GRU: "",
+  GRW: "",
+  RUW: "",
+  BGRU: "",
+  BGRW: "",
+  BRUW: "",
+  BGUW: "",
+  GRUW: "",
+  BGRUW: new THREE.TextureLoader().load("../img/5color-texture.png"),
+};
+
+export const getTexture = (colorIdentity) => {
+  let texture;
+  if (colorIdentity) {
+    console.log(colorIdentity);
+    const colorIds = colorIdentity.sort();
+    const joinedClrIds = colorIds.join("");
+    console.log(joinedClrIds);
+    texture = textures[joinedClrIds];
+  } else {
+    texture = textures[undefined];
+  }
+  console.log(texture);
+
+  return texture;
 };
 
 // Converts colorIdentitly into a posArray(s).

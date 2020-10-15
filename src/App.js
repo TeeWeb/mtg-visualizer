@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { render } from "react-dom";
 import { Canvas, extend } from "react-three-fiber";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
@@ -100,17 +100,19 @@ const App = () => {
           gl.shadowMap.type = THREE.PCFShadowMap;
         }}
       >
-        <fog attach="fog" args={["gray", 250, 400]} />
-        <Controls />
-        <Plane
-          cards={cards}
-          origins={origins}
-          handleUpdateOverlayData={(name, imageUrl) =>
-            updateOverlayData(name, imageUrl)
-          }
-        />
-        <ambientLight intensity={0.75} />
-        <spotLight position={[0, 100, 150]} penumbra={0.15} castShadow />
+        <Suspense fallback={null}>
+          <fog attach="fog" args={["gray", 250, 400]} />
+          <Controls />
+          <Plane
+            cards={cards}
+            origins={origins}
+            handleUpdateOverlayData={(name, imageUrl) =>
+              updateOverlayData(name, imageUrl)
+            }
+          />
+          <ambientLight intensity={0.75} />
+          <spotLight position={[0, 100, 150]} penumbra={0.15} castShadow />
+        </Suspense>
       </Canvas>
       <GUI handleUpdateCards={() => requestCards} />
       <Overlay imageUrl={overlayData} />

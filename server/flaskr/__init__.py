@@ -1,0 +1,1 @@
+from flaskr.synergyCalc import CalculatedSynergy

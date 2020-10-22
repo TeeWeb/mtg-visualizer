@@ -5,5 +5,13 @@ dist/
 coverage/
 .vscode/
 server/env/
+server/venv/
+server/*.pyc
+instance/
+.pytest_cache/
+.coverage
+htmlcov/
+build/
+*.egg-info/
 venv/
 server/__pycache__/

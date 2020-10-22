@@ -12,6 +12,7 @@ import Overlay from "./Components/Overlay";
 
 const App = () => {
   extend({ OrbitControls });
+  const [initialData, setInitialData] = useState([{}])
   const [cards, setCards] = useState([]);
   const [overlayData, setOverlayData] = useState([]);
   // const [activeColors, setActiveColors] = useState([]);
@@ -89,6 +90,8 @@ const App = () => {
   // };
 
   useEffect(() => {
+    console.log("App.js useEffect()")
+    fetch('/api', {headers: {'Accept': 'text/plain', 'Content-Type': 'application/json'}}).then(response => console.log(response))
     setCards([]);
   }, [setCards]);
 

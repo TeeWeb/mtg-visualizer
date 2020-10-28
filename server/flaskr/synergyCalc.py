@@ -1,55 +1,62 @@
+from collections import namedtuple
+from itertools import count
 from mtgsdk import Card
 
 synergy_report_template = {
     "synergy_score": None,
     "cards": None,
-    "color_identities": None,
+    "colors": None,
     "keyword_abilities": None
 }
 
 class CalculatedSynergy():
-    def __init__(self, id_a, id_b):
+    def __init__(self, id_a, cards):
         self.card_a = Card.find(id_a)
-        self.card_b = Card.find(id_b)
+        self.otherCards = cards
 
-    def calc_colors(self):
+    def _calc_colors(self, b_clrs):
         clr_synergy = 0
-        a_clrs = self.card_a.colors
-        b_clrs = self.card_b.colors
-        print(a_clrs, b_clrs)
-        if len(a_clrs) > 0 and len(b_clrs) > 0:
-            for color in a_clrs:
+        print(self.card_a.colors, b_clrs)
+        if len(self.card_a.colors) > 0 and len(b_clrs) > 0:
+            for color in self.card_a.colors:
                 if color in b_clrs:
                     clr_synergy += 1
         else:
             clr_synergy = 1
-            
         return clr_synergy
 
-    def calc_keyword_abilities(self):
+    def _calc_keyword_abilities(self, b_card):
         abil_synergy = 0
-        print(self.card_a.text)
-        return abil_synergy
+        try:
+            print("$$$A ->", self.card_a.text)
+        except:
+            print("--- A has NO TEXT ---")
+        try:
+            print("$$$B ->", b_card["text"])
+        except:
+            print("--- B has NO TEXT ---")
+        finally:
+            return abil_synergy
 
-    def create_synergy_report(self):
-        print(self.card_a)
+    def create_synergy_report(self, b_card):
         report = synergy_report_template
-        report["cards"] = [self.card_a.name, self.card_b.name]
-        report["color_identities"] = self.calc_colors()
-        report["keyword_abilities"] = self.calc_keyword_abilities()
-        
-        report["synergy_score"] = self.calculate_synergy(report)
-        return report
-
-    # Calculate synergy of cardB with cardA
-    def calculate_synergy(self, report): 
-        if self.card_a.name == self.card_b.name:
+        if self.card_a.name == b_card["name"]:
             return {
                 "synergy_score": 100,
                 "name": self.card_a.name
             }
-        syn_score = report["color_identities"] + report["keyword_abilities"] 
-        return syn_score
+        else:
+            report["cards"] = [self.card_a.name, b_card["name"]]
+            report["colors"] = self._calc_colors(b_card["colors"])
+            report["keyword_abilities"] = self._calc_keyword_abilities(b_card)
+            report["synergy_score"] = report["colors"] + report["keyword_abilities"]
+            return report
 
-# synergy = CalculatedSynergy(str(439687), str(129466))
-# print(synergy.create_synergy_report())
+    def get_synergy_scores(self): 
+        SynergyScores = namedtuple('SynergyScores', 'cardId cardName relatedCards')
+        reports = []
+        for card in self.otherCards:
+            report = self.create_synergy_report(card)
+            reports.append(dict(report))
+        synergyScore = SynergyScores(self.card_a.multiverse_id, self.card_a.name, reports)
+        return synergyScore

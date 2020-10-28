@@ -3,7 +3,7 @@ import { render } from "react-dom";
 import { Canvas, extend } from "react-three-fiber";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import * as THREE from "three";
-import mtg from "mtgsdk";
+import mtg, { card } from "mtgsdk";
 
 import Controls from "./Components/Controls";
 import Plane from "./Components/Plane";
@@ -12,7 +12,6 @@ import Overlay from "./Components/Overlay";
 
 const App = () => {
   extend({ OrbitControls });
-  const [initialData, setInitialData] = useState([{}])
   const [cards, setCards] = useState([]);
   const [overlayData, setOverlayData] = useState([]);
   // const [activeColors, setActiveColors] = useState([]);
@@ -46,6 +45,7 @@ const App = () => {
 
     cardData.forEach((card) => {
       // TODO: Determine how to handle duplicate cards/alternate artwork
+      // Update 10/22/20: Found that many duplicates were missing multiverseIds. Added function to "prune" those from [allCards] state in <Plane /> component.
       if (card.imageUrl) {
         filteredCards.push(card);
       } else {
@@ -90,8 +90,6 @@ const App = () => {
   // };
 
   useEffect(() => {
-    console.log("App.js useEffect()")
-    fetch('/api', {headers: {'Accept': 'text/plain', 'Content-Type': 'application/json'}}).then(response => console.log(response))
     setCards([]);
   }, [setCards]);
 

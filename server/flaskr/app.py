@@ -1,12 +1,14 @@
 import os
 import requests
 from yaml import load, Loader
-from flask import Flask, request
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 
 from flaskr.synergyCalc import CalculatedSynergy
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
+    CORS(app)
     app.config.from_mapping(
         SECRET_KEY='dev',
         DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
@@ -24,21 +26,6 @@ def create_app(test_config=None):
         os.makedirs(app.instance_path)
     except OSError:
         pass
-
-    def retrieve_all_cards():
-        print("Downloading MTG cards data...")
-        cards_req = requests.get('https://api.magicthegathering.io/v1/cards')
-        if cards_req.status_code is 200:
-            multiverse_ids = []
-            for card in cards_req.json()["cards"]:
-                id = card.get('multiverseid')
-                if id:
-                    multiverse_ids.append(id)
-            print(multiverse_ids)
-            with open('./data/ids.yaml', 'w') as f:
-                f.write(str(multiverse_ids))
-        else:
-            print("cards_req status code: ", cards_req.status_code)
 
     def retrieve_all_types():
         print("Downloading MTG types data...")
@@ -68,7 +55,6 @@ def create_app(test_config=None):
             print("keywords_req status code: ", keywords_req.status_code)
 
     def retrieve_all_data():
-        retrieve_all_cards()
         retrieve_all_types()
         retrieve_all_sets()
         retrieve_all_keywords()
@@ -103,21 +89,14 @@ def create_app(test_config=None):
     def api():
         return {"data": 1234}
 
-    @app.route('/api/synergize', methods=['GET'])
+    @app.route('/api/synergize', methods=['POST'])
     def synergize():
-        args = request.args
-        if "card1" in args:
-            id_a = args["card1"]
-        else:
-            print("Invalid query parameter: ", args["card1"])
-        if "card2" in args:
-            id_b = args["card2"]
-        else: print("Invalid query parameter: ", args["card2"])
-        print("Calculating Symmetry of: a) {0}, and b) {1}".format(id_a, id_b))
+        selected_card = request.args.get('card')
+        data = request.get_json()
+        synergy = CalculatedSynergy(selected_card, data['otherCards'])
 
-        syn = CalculatedSynergy(id_a, id_b)
-        syn_calc = dict(syn.create_synergy_report())
-        print(syn_calc)
-        return syn_calc
+        syn_calc = synergy.get_synergy_scores()
+
+        return jsonify(syn_calc)
 
     return app

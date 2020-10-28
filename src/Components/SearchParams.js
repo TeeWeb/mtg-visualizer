@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import KEYWORDS from "../data/Keywords";
+import TYPES from "../data/Types"
 
 import "./SearchParams.css";
 
@@ -17,13 +18,9 @@ const SearchParams = ({ requestCards }) => {
   const allKeywords = abilityWords.concat(keywordAbilities).sort();
 
   const getAllTypes = () => {
-    fetch("https://api.magicthegathering.io/v1/types").then((res) => {
-      const types = res.json().then((data) => {
-        setAllCardTypes(data.types);
-        return data.types;
-      });
-      return types;
-    });
+    const types = TYPES.sort()
+    setAllCardTypes(types)
+    return types;
   };
 
   const getAllSets = () => {

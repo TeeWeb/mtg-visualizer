@@ -28,6 +28,7 @@ const Card = ({
   types,
   subtypes,
   text,
+  multiverseId
 }) => {
   const threeJSColors = normalizeColors(colorIdentity);
   const initialCoordsArray = convertColorIdsToPosArrays(colorIdentity);
@@ -37,7 +38,7 @@ const Card = ({
     averagedCoords[1],
     convertCmcToYValue(cmc),
   ];
-  const texture = useLoader(THREE.TextureLoader, "../img/5color-texture.png");
+  // const texture = useLoader(THREE.TextureLoader, "../img/5color-texture.png");
 
   const meshRef = useRef();
   const baseScale = [1, 1, 1];
@@ -73,7 +74,8 @@ const Card = ({
       types,
       subtypes,
       text,
-      imageUrl
+      imageUrl,
+      multiverseId
     );
 
     console.log(
@@ -103,7 +105,6 @@ const Card = ({
         color={props.colors}
         transparent={true}
         opacity={props.opacity}
-        map={texture}
       />
     </a.mesh>
   );

@@ -14,4 +14,4 @@ htmlcov/
 build/
 *.egg-info/
 venv/
-server/flaskr/__pycache__/
+server/flaskr/__pycache__/*

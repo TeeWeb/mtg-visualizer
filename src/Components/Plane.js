@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios"
+
 import Card from "./Card";
 import { getSynergisticCards, calcAvgPos } from "./Utils";
 
@@ -18,23 +20,68 @@ const Plane = ({ cards, origins, handleUpdateOverlayData }) => {
     types,
     subtypes,
     text,
-    imageUrl
+    imageUrl,
+    multiverseId
   ) => {
     if (isActive) {
       setSelectedCard();
     } else {
-      console.log("Selecting card:", cardKey, name, colorId, imageUrl);
-      cards.forEach((card) => {
-        if (card.id === cardKey) {
-          setSelectedCard(card);
+      console.log("Selecting card:", cardKey, name, colorId, imageUrl, multiverseId);
+      let synergizedCards = []
+      allCards.forEach((card) => {
+        // Remove cards that are missing multiverse IDs (usually duplicates anyways)
+        if (card.multiverseid !== undefined) {
+          if (card.multiverseid === multiverseId) {
+            setSelectedCard(card)
+          } else {
+            synergizedCards.push({
+              id: card.multiverseid,
+              colors: card.colors,
+              manaCost: card.manaCost,
+              cmc: card.cmc,
+              name: card.name,
+              legalities: card.legalities,
+              text: card.text,
+              type: card.type,
+              subtypes: card.subtypes,
+              set: card.set,
+              power: card.power,
+              toughness: card.toughness
+            })
+          }
         }
       });
+      console.log(synergizedCards)
+      axios.post('http://localhost:5000/api/synergize?card=' + multiverseId, {otherCards: synergizedCards}).then(response => {
+        console.log(response.data)
+        response.data
+      }, error => {
+        console.log(error)
+      })
     }
   };
 
+  async function getSynergy (cardIdA, cardIdB) {
+    const synergyScore = 0;
+    fetch('http://localhost:5000/api/synergize?card1=' + cardIdA + '&card2=' + cardIdB).then(res => {
+      res.json()
+    }).then(data => {
+      console.log(typeof(data))
+    })
+    return synergyScore
+  }
+
   useEffect(() => {
+    // API includes many duplicate cards that don't have multiverse IDs. Need to "prune" the array of cards for further use.
+    const prunedCards = []
+    cards.forEach(rawCard => {
+      if (rawCard.multiverseid) {
+        prunedCards.push(rawCard)
+      }
+    });
+    console.log(selectedCard)
     if (selectedCard === undefined) {
-      setAllCards(cards);
+      setAllCards(prunedCards);
     } else {
       let filteredCards = getSynergisticCards(
         selectedCard.id,
@@ -43,14 +90,14 @@ const Plane = ({ cards, origins, handleUpdateOverlayData }) => {
         selectedCard.types,
         selectedCard.subtypes,
         selectedCard.text,
-        cards
+        prunedCards
       );
       filteredCards.push(selectedCard);
       setAllCards(filteredCards);
       console.log("Filtered cards:", filteredCards);
       handleUpdateOverlayData(selectedCard.id);
     }
-  }, [cards, selectedCard]);
+  }, [cards, selectedCard, handleUpdateOverlayData]);
 
   return (
     <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
@@ -79,6 +126,7 @@ const Plane = ({ cards, origins, handleUpdateOverlayData }) => {
           types={card.types}
           subtypes={card.subtypes}
           text={card.text}
+          multiverseId={card.multiverseid}
         />
       ))}
     </mesh>

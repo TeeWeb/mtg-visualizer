@@ -51,7 +51,6 @@ const Plane = ({ cards, origins, handleUpdateOverlayData }) => {
           }
         }
       });
-      console.log(synergizedCards)
       axios.post('http://localhost:5000/api/synergize?card=' + multiverseId, {otherCards: synergizedCards}).then(response => {
         console.log(response.data)
         response.data
@@ -61,14 +60,16 @@ const Plane = ({ cards, origins, handleUpdateOverlayData }) => {
     }
   };
 
-  async function getSynergy (cardIdA, cardIdB) {
-    const synergyScore = 0;
-    fetch('http://localhost:5000/api/synergize?card1=' + cardIdA + '&card2=' + cardIdB).then(res => {
-      res.json()
-    }).then(data => {
-      console.log(typeof(data))
-    })
-    return synergyScore
+  const displayHoveredCard = (id) => {
+    handleUpdateOverlayData(id)
+  }
+
+  const displaySelectedCard = (id) => {
+    if (selectedCard !== undefined) {
+      handleUpdateOverlayData(selectedCard.id)
+    } else {
+      handleUpdateOverlayData(id)
+    }
   }
 
   useEffect(() => {
@@ -79,7 +80,6 @@ const Plane = ({ cards, origins, handleUpdateOverlayData }) => {
         prunedCards.push(rawCard)
       }
     });
-    console.log(selectedCard)
     if (selectedCard === undefined) {
       setAllCards(prunedCards);
     } else {
@@ -94,8 +94,6 @@ const Plane = ({ cards, origins, handleUpdateOverlayData }) => {
       );
       filteredCards.push(selectedCard);
       setAllCards(filteredCards);
-      console.log("Filtered cards:", filteredCards);
-      handleUpdateOverlayData(selectedCard.id);
     }
   }, [cards, selectedCard, handleUpdateOverlayData]);
 
@@ -122,6 +120,8 @@ const Plane = ({ cards, origins, handleUpdateOverlayData }) => {
           toughness={card.toughness}
           imageUrl={card.imageUrl}
           handleSelectCard={selectCard}
+          handleHoverCard={displayHoveredCard}
+          handleHoverOff={displaySelectedCard}
           supertypes={card.supertypes}
           types={card.types}
           subtypes={card.subtypes}

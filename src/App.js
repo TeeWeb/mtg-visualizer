@@ -62,7 +62,6 @@ const App = () => {
   const updateOverlayData = (id) => {
     setOverlayData();
     let overlayCard;
-    console.log("Updating Overlay Data: ", id);
     cards.forEach((card) => {
       if (card.id === id) {
         overlayCard = card;

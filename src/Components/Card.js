@@ -24,6 +24,8 @@ const Card = ({
   toughness,
   imageUrl,
   handleSelectCard,
+  handleHoverCard,
+  handleHoverOff,
   supertypes,
   types,
   subtypes,
@@ -89,11 +91,21 @@ const Card = ({
     );
   };
 
+  const handleOnPointerOver = () => {
+    setHovered(true)
+    handleHoverCard(id)
+  }
+
+  const handleOnPointerOut = () => {
+    setHovered(false)
+    handleHoverOff(id)
+  }
+
   return (
     <a.mesh
       ref={meshRef}
-      onPointerOver={() => setHovered(true)}
-      onPointerOut={() => setHovered(false)}
+      onPointerOver={() => handleOnPointerOver()}
+      onPointerOut={() => handleOnPointerOut()}
       onClick={() => handleOnClick()}
       scale={props.scale}
       position={props.position}

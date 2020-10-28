@@ -5,7 +5,7 @@ from mtgsdk import Card
 synergy_report_template = {
     "synergy_score": None,
     "cards": None,
-    "colors": None,
+    "colors": {},
     "keyword_abilities": None
 }
 
@@ -15,14 +15,17 @@ class CalculatedSynergy():
         self.otherCards = cards
 
     def _calc_colors(self, b_clrs):
-        clr_synergy = 0
+        clr_synergy = {
+            "score": 0,
+            "colors": (self.card_a.colors, b_clrs)
+        }
         print(self.card_a.colors, b_clrs)
         if len(self.card_a.colors) > 0 and len(b_clrs) > 0:
             for color in self.card_a.colors:
                 if color in b_clrs:
-                    clr_synergy += 1
+                    clr_synergy["score"] += 1
         else:
-            clr_synergy = 1
+            clr_synergy["score"] = 1
         return clr_synergy
 
     def _calc_keyword_abilities(self, b_card):
@@ -47,9 +50,9 @@ class CalculatedSynergy():
             }
         else:
             report["cards"] = [self.card_a.name, b_card["name"]]
-            report["colors"] = self._calc_colors(b_card["colors"])
+            report["colors"] = dict(self._calc_colors(b_card["colors"]))
             report["keyword_abilities"] = self._calc_keyword_abilities(b_card)
-            report["synergy_score"] = report["colors"] + report["keyword_abilities"]
+            report["synergy_score"] = report["colors"]["score"] + report["keyword_abilities"]
             return report
 
     def get_synergy_scores(self): 

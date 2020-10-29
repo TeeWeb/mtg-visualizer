@@ -17,6 +17,7 @@ const Card = ({
   name,
   id,
   colors,
+  coords,
   colorIdentity,
   cmc,
   manaCost,
@@ -33,13 +34,6 @@ const Card = ({
   multiverseId
 }) => {
   const threeJSColors = normalizeColors(colorIdentity);
-  const initialCoordsArray = convertColorIdsToPosArrays(colorIdentity);
-  const averagedCoords = calcAvgPos(initialCoordsArray);
-  const calculatedPosition = [
-    averagedCoords[0],
-    averagedCoords[1],
-    convertCmcToYValue(cmc),
-  ];
   // const texture = useLoader(THREE.TextureLoader, "../img/5color-texture.png");
 
   const meshRef = useRef();
@@ -53,7 +47,7 @@ const Card = ({
       active || hovered
         ? [baseScale[0] * 3, baseScale[1] * 3, baseScale[2] * 3]
         : baseScale,
-    position: calculatedPosition,
+    position: coords,
     colors: threeJSColors,
     opacity: active || hovered ? 1.0 : 0.6,
   });

@@ -15,7 +15,7 @@ const isColorless = (colorIdentity) => {
   }
 };
 
-// Converts colorIdentitly into a posArray(s).
+// Converts colorIdentity into a positionArray(s).
 // The array(s) contain X and Z coordinates to be used in determining the cards position,
 // based on the card's color origin(s)
 export const convertColorIdsToPosArrays = (colorIdArray) => {
@@ -91,7 +91,7 @@ const extractXYValues = (coordArrays) => {
     coordArrays.forEach((array) => {
       xValues.push(array[0]);
       yValues.push(array[1]);
-    });
+    })
   } else if (typeof coordArrays[0][0][0] == "number") {
     coordArrays.forEach((coordArray) => {
       coordArray.forEach((array) => {
@@ -100,7 +100,7 @@ const extractXYValues = (coordArrays) => {
       });
     });
   } else {
-    console.log("HELP!!! LEVEL 4+ COORD EXTRACTION!?", coordArrays);
+    console.log("Too many nested arrays... Double-check the coordArrays passed to extractXYValues()")
   }
 
   const xyValues = {};
@@ -132,6 +132,7 @@ export const calcAvgPos = (coordArrays) => {
   return avgCoords;
 };
 
+// May move this logic to server-side...
 export const getSynergisticCards = (
   selectedCardKey,
   colorId,

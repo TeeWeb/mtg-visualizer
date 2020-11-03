@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { render } from "react-dom";
 import { Canvas, extend } from "react-three-fiber";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import * as THREE from "three";
-import mtg from "mtgsdk";
+import mtg, { card } from "mtgsdk";
 
 import Controls from "./Components/Controls";
 import Plane from "./Components/Plane";
@@ -11,7 +10,6 @@ import GUI from "./Components/GUI";
 import Overlay from "./Components/Overlay";
 
 const App = () => {
-  extend({ OrbitControls });
   const [cards, setCards] = useState([]);
   const [overlayData, setOverlayData] = useState([]);
   // const [activeColors, setActiveColors] = useState([]);
@@ -45,6 +43,7 @@ const App = () => {
 
     cardData.forEach((card) => {
       // TODO: Determine how to handle duplicate cards/alternate artwork
+      // Update 10/22/20: Found that many duplicates were missing multiverseIds. Added function to "prune" those from [allCards] state in <Plane /> component.
       if (card.imageUrl) {
         filteredCards.push(card);
       } else {
@@ -61,7 +60,6 @@ const App = () => {
   const updateOverlayData = (id) => {
     setOverlayData();
     let overlayCard;
-    console.log("Updating Overlay Data: ", id);
     cards.forEach((card) => {
       if (card.id === id) {
         overlayCard = card;
@@ -100,17 +98,19 @@ const App = () => {
           gl.shadowMap.type = THREE.PCFShadowMap;
         }}
       >
-        <fog attach="fog" args={["gray", 250, 400]} />
-        <Controls />
-        <Plane
-          cards={cards}
-          origins={origins}
-          handleUpdateOverlayData={(name, imageUrl) =>
-            updateOverlayData(name, imageUrl)
-          }
-        />
-        <ambientLight intensity={0.75} />
-        <spotLight position={[0, 100, 150]} penumbra={0.15} castShadow />
+        <Suspense fallback={null}>
+          <fog attach="fog" args={["gray", 250, 400]} />
+          <Controls />
+          <Plane
+            cards={cards}
+            origins={origins}
+            handleUpdateOverlayData={(name, imageUrl) =>
+              updateOverlayData(name, imageUrl)
+            }
+          />
+          <ambientLight intensity={0.75} />
+          <spotLight position={[0, 100, 150]} penumbra={0.15} castShadow />
+        </Suspense>
       </Canvas>
       <GUI handleUpdateCards={() => requestCards} />
       <Overlay imageUrl={overlayData} />

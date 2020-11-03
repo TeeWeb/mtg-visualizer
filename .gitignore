@@ -4,4 +4,14 @@ node_modules/
 dist/
 coverage/
 .vscode/
-.env
+server/env/
+server/venv/
+*.pyc
+instance/
+.pytest_cache/
+.coverage
+htmlcov/
+build/
+*.egg-info/
+venv/
+__pycache__/

@@ -122,7 +122,6 @@ const Plane = ({ cards, handleUpdateOverlayData }) => {
     imageUrl,
     multiverseId,
     coords,
-    id
   ) => {
     if (isActive) {
       setSelectedCard();
@@ -155,6 +154,7 @@ const Plane = ({ cards, handleUpdateOverlayData }) => {
       axios.post('http://localhost:5000/api/synergize?card=' + multiverseId, {otherCards: synergizedCards}).then(response => {
         response.data
       }, error => {
+        console.log(error)
       })
     }
   };
@@ -187,7 +187,7 @@ const Plane = ({ cards, handleUpdateOverlayData }) => {
       );
       filteredCards.push(selectedCard);
     }
-  }, [cards, selectedCard, handleUpdateOverlayData]);
+  }, [cards, selectedCard, processCards, handleUpdateOverlayData]);
 
   return (
     <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>

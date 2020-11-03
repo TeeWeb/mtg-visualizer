@@ -1,5 +1,3 @@
-import * as THREE from "three";
-
 const origins = {
   colorless: [0, 0, 0],
   white: [0, 100, 0],
@@ -17,58 +15,7 @@ const isColorless = (colorIdentity) => {
   }
 };
 
-const textures = {
-  undefined: new THREE.TextureLoader().load("img/colorless-texture.png"),
-  W: new THREE.TextureLoader().load("../img/colorless-texture.png"),
-  B: new THREE.TextureLoader().load("../img/b-texture.png"),
-  G: new THREE.TextureLoader().load("../img/g-texture.png"),
-  U: "",
-  R: "",
-  BW: "",
-  UW: "",
-  GW: new THREE.TextureLoader().load("../img/gw-texture.png"),
-  RW: "",
-  BG: "",
-  BR: "",
-  BU: "",
-  GU: "",
-  GR: "",
-  RU: "",
-  BGW: "",
-  BGU: "",
-  BGR: "",
-  BRW: "",
-  BRU: "",
-  BUW: "",
-  GUW: "",
-  GRU: "",
-  GRW: "",
-  RUW: "",
-  BGRU: "",
-  BGRW: "",
-  BRUW: "",
-  BGUW: "",
-  GRUW: "",
-  BGRUW: new THREE.TextureLoader().load("../img/5color-texture.png"),
-};
-
-export const getTexture = (colorIdentity) => {
-  let texture;
-  if (colorIdentity) {
-    console.log(colorIdentity);
-    const colorIds = colorIdentity.sort();
-    const joinedClrIds = colorIds.join("");
-    console.log(joinedClrIds);
-    texture = textures[joinedClrIds];
-  } else {
-    texture = textures[undefined];
-  }
-  console.log(texture);
-
-  return texture;
-};
-
-// Converts colorIdentitly into a posArray(s).
+// Converts colorIdentity into a positionArray(s).
 // The array(s) contain X and Z coordinates to be used in determining the cards position,
 // based on the card's color origin(s)
 export const convertColorIdsToPosArrays = (colorIdArray) => {
@@ -144,7 +91,7 @@ const extractXYValues = (coordArrays) => {
     coordArrays.forEach((array) => {
       xValues.push(array[0]);
       yValues.push(array[1]);
-    });
+    })
   } else if (typeof coordArrays[0][0][0] == "number") {
     coordArrays.forEach((coordArray) => {
       coordArray.forEach((array) => {
@@ -153,7 +100,7 @@ const extractXYValues = (coordArrays) => {
       });
     });
   } else {
-    console.log("HELP!!! LEVEL 4+ COORD EXTRACTION!?", coordArrays);
+    console.log("Too many nested arrays... Double-check the coordArrays passed to extractXYValues()")
   }
 
   const xyValues = {};
@@ -185,6 +132,7 @@ export const calcAvgPos = (coordArrays) => {
   return avgCoords;
 };
 
+// May move this logic to server-side...
 export const getSynergisticCards = (
   selectedCardKey,
   colorId,

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, Suspense } from "react";
 import { render } from "react-dom";
 import { Canvas, extend } from "react-three-fiber";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import * as THREE from "three";
 import mtg, { card } from "mtgsdk";
 
@@ -11,7 +10,6 @@ import GUI from "./Components/GUI";
 import Overlay from "./Components/Overlay";
 
 const App = () => {
-  extend({ OrbitControls });
   const [cards, setCards] = useState([]);
   const [overlayData, setOverlayData] = useState([]);
   // const [activeColors, setActiveColors] = useState([]);

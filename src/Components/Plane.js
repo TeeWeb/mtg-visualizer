@@ -20,13 +20,11 @@ const Plane = ({ cards, handleUpdateOverlayData }) => {
     const talliedCoords = coordCounts(trimmedCards)
     const cardIdsToUpdate = getCoordAdjustments(talliedCoords)
     if (cardIdsToUpdate) {
-      console.log("Updating these card's coords...", cardIdsToUpdate)
       const updatedCardsArray = trimmedCards
       updatedCardsArray.forEach(card => {
         if (cardIdsToUpdate[card.multiverseid]) {
           card.coords[0] += parseFloat(cardIdsToUpdate[card.multiverseid][0])
           card.coords[1] += parseFloat(cardIdsToUpdate[card.multiverseid][1])
-          console.log("Updated coords for " + card.multiverseid + " | " + card.name + ": " + card.coords)
         }
       })
       return updatedCardsArray
@@ -102,7 +100,6 @@ const Plane = ({ cards, handleUpdateOverlayData }) => {
         talliedCoords[i].multiverseIds.forEach((id, idIndex) => {
           let newX = parseFloat(3 * (Math.cos(angle * idIndex))).toFixed(2)
           let newY = parseFloat(3 * (Math.sin(angle * idIndex))).toFixed(2)
-          console.log(id, talliedCoords[i], newX, newY, angle)  
           if (idIndex > 0) {
             cardIdsToUpdate[id] = [newX, newY]
           }
@@ -123,18 +120,20 @@ const Plane = ({ cards, handleUpdateOverlayData }) => {
     subtypes,
     text,
     imageUrl,
-    multiverseId
+    multiverseId,
+    coords,
+    id
   ) => {
     if (isActive) {
       setSelectedCard();
     } else {
-      console.log("Selecting card:", cardKey, name, colorId, imageUrl, multiverseId);
       let synergizedCards = []
       allCards.forEach((card) => {
         // Remove cards that are missing multiverse IDs (usually duplicates anyways)
         if (card.multiverseid !== undefined) {
           if (card.multiverseid === multiverseId) {
             setSelectedCard(card)
+            handleUpdateOverlayData(cardKey, coords)
           } else {
             synergizedCards.push({
               id: card.multiverseid,
@@ -154,10 +153,8 @@ const Plane = ({ cards, handleUpdateOverlayData }) => {
         }
       });
       axios.post('http://localhost:5000/api/synergize?card=' + multiverseId, {otherCards: synergizedCards}).then(response => {
-        console.log(response.data)
         response.data
       }, error => {
-        console.log(error)
       })
     }
   };
@@ -197,9 +194,9 @@ const Plane = ({ cards, handleUpdateOverlayData }) => {
       <planeBufferGeometry attach="geometry" args={[1000, 1000]} />
       <meshStandardMaterial
         attach="material"
-        color={"silver"}
+        color={"black"}
         transparent
-        opacity={0.1}
+        opacity={0.5}
       />
       {allCards.map((card) => (
         <Card

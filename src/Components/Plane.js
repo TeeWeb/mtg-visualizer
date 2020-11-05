@@ -187,7 +187,7 @@ const Plane = ({ cards, handleUpdateOverlayData }) => {
       );
       filteredCards.push(selectedCard);
     }
-  }, [cards, selectedCard, processCards, handleUpdateOverlayData]);
+  }, [cards, selectedCard, handleUpdateOverlayData]);
 
   return (
     <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
